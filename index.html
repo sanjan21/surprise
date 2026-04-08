@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Love Surprise ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Heart background layer */
+    #heartLayer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      text-align: center;
+      color: white;
+      position: relative;
+      z-index: 1; /* above hearts */
+    }
+
+    h1 {
+      font-size: 2rem;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-top: 10px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: white;
+      color: #ff4b5c;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff4b5c;
+      color: white;
+    }
+
+    .hidden { display: none; }
+
+    img, video {
+      width: 600px;       /* bigger size */
+      max-width: 90vw;    /* responsive: never bigger than 90% of viewport */
+      border-radius: 10px;
+      margin-top: 10px;
+}
+
+    .typing {
+      border-right: .1em solid #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .heart {
+      position: absolute;
+      animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    #slideText {
+      margin-top: 15px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Heart background -->
+<div id="heartLayer"></div>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- FIRST SCREEN -->
+<div class="container" id="firstScreen">
+  <h1>Hey Love ❤️</h1>
+  <p>Do you love me? 🥺</p>
+  <img src="question.jpeg">
+  <br>
+  <button onclick="yesClicked()">Yes 💖</button>
+  <button onclick="noClicked()">No 😒</button>
+</div>
+
+<!-- YES SCREEN -->
+<div class="container hidden" id="yesScreen">
+  <h1>Yaaay! I knew it 😍</h1>
+  <img src="girl-cute.gif">
+  <p>Now click below for your surprise 💌</p>
+  <button onclick="startSlideshow()">Click for Surprise 🎁</button>
+</div>
+
+<!-- NO SCREEN -->
+<div class="container hidden" id="noScreen">
+  <h1 id="noText">Oh... really? 💔</h1>
+  <img id="noImage" src="sad.jpeg">
+  <p id="noMsg">That hurt 😢</p>
+  <button id="sorryBtn" class="hidden" onclick="goBack()">Sorry 😭</button>
+</div>
+
+<!-- SLIDESHOW -->
+<div class="container hidden" id="slideshow">
+  <img id="slideImage" src="" class="hidden">
+  <video id="slideVideo" class="hidden" autoplay muted loop></video>
+  <h1 id="slideText" class="typing"></h1>
+</div>
+
+<script>
+const firstScreen = document.getElementById("firstScreen");
+const yesScreen = document.getElementById("yesScreen");
+const noScreen = document.getElementById("noScreen");
+const slideshow = document.getElementById("slideshow");
+const slideImage = document.getElementById("slideImage");
+const slideVideo = document.getElementById("slideVideo");
+const slideText = document.getElementById("slideText");
+const noText = document.getElementById("noText");
+const noImage = document.getElementById("noImage");
+const noMsg = document.getElementById("noMsg");
+const sorryBtn = document.getElementById("sorryBtn");
+
+// 💖 Buttons
+function yesClicked() {
+  firstScreen.classList.add("hidden");
+  yesScreen.classList.remove("hidden");
+  document.getElementById("bgMusic").play();
+}
+
+function noClicked() {
+  firstScreen.classList.add("hidden");
+  noScreen.classList.remove("hidden");
+
+  setTimeout(() => {
+    noText.innerText = "HOW DARE YOU 😡";
+    noImage.src = "angy.gif";
+    noMsg.innerText = "Say sorry RIGHT NOW 😤";
+    sorryBtn.classList.remove("hidden");
+  }, 4000);
+}
+
+function goBack() { location.reload(); }
+
+// 🎬 Slides (images + videos)
+let currentSlide = 0;
+let slides = [
+  { type: "image", src: "first.jpeg", text: "Our first memory 💖" },
+  { type: "image", src: "um.jpeg", text: "You & Me 🫶" },
+  { type: "video", src: "wee.mp4", text: "Our cute moment 🎥" },
+  { type: "image", src: "temp.jpeg", text: "My happiness 😊" },
+  { type: "image", src: "fav.jpeg", text: "My favorite person ❤️" },
+  { type: "image", src: "hap.jpeg", text: "Always together 💕" },
+  { type: "image", src: "bestm.jpeg", text: "Best memories ❤️💋" },
+  { type: "image", src: "fall.jpeg", text: "You are my world 🌍" },
+  { type: "image", src: "us.jpeg", text: "Forever us 💋" },
+  { type: "image", src: "kiss.jpeg", text: "💋💋💋💋" },
+  { type: "video", src: "him.mp4", text: "My everything 💞" },
+  { type: "image", src: "eeee.jpeg", text: "Still falling for you 😍" },
+  { type: "image", src: "birthday.jpeg", text: "Happy Birthday My Love 🎂❤️" }
+];
+
+let autoSlideInterval;
+
+let autoSlideTimeout;
+
+function startSlideshow() {
+  yesScreen.classList.add("hidden");
+  slideshow.classList.remove("hidden");
+  currentSlide = 0;
+  showSlide();
+}
+
+function showSlide() {
+  clearTimeout(autoSlideTimeout); // stop previous timeout
+  const slide = slides[currentSlide];
+  slideText.innerText = '';
+
+  if(slide.type === 'image'){
+    slideImage.src = slide.src;
+    slideImage.classList.remove('hidden');
+    slideVideo.classList.add('hidden');
+
+    typeWriterEffect(slide.text);
+
+    // next slide automatically after 3 seconds
+    autoSlideTimeout = setTimeout(nextSlide, 4000);
+
+  } else { // video slide
+    slideVideo.src = slide.src;
+    slideVideo.classList.remove('hidden');
+    slideImage.classList.add('hidden');
+
+    slideVideo.currentTime = 0;
+    slideVideo.play();
+
+    typeWriterEffect(slide.text);
+
+    // next slide automatically after 6 seconds
+    autoSlideTimeout = setTimeout(nextSlide, 7000);
+  }
+}
+
+function typeWriterEffect(text) {
+  let i = 0;
+  slideText.innerHTML = '';
+  function typeWriter() {
+    if(i < text.length){
+      slideText.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, 50);
+    }
+  }
+  typeWriter();
+}
+
+function nextSlide() {
+  currentSlide++;
+  if (currentSlide >= slides.length) {
+    // Final slide message
+    slideText.innerText = "💋Love You Shana...😘";
+
+    // Show kiss GIF
+    slideImage.src = "kisu.gif";    // make sure this file exists
+    slideImage.classList.remove('hidden');  // remove hidden
+    slideVideo.classList.add('hidden');     // hide video
+
+    // Optional: stop any slideshow interval
+    clearInterval(autoSlideInterval);
+  } else {
+    showSlide();
+  }
+}
+
+// 💕 Floating hearts in background
+setInterval(() => {
+  let heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (Math.random() * 25 + 15) + "px";
+  document.getElementById("heartLayer").appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 300);
+
+</script>
+</body>
+</html>
